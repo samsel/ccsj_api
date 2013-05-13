@@ -8,13 +8,14 @@ fs.readFile('site/index.html', 'utf8', function (err, html) {
     var $html = $(html),
         nav,
         recentSermons;
-    nav = scrapper.getNavLinks($html); 
-    recentSermons = scrapper.getRecentSermons($html); 
-    console.log(recentSermons);
+    nav = scrapper.nav($html); 
+    recentSermons = scrapper.recentSermons($html); 
+    upcomingEvents = scrapper.upcomingEvents($html); 
+    console.log(upcomingEvents);
 });
 
 var scrapper = {
-    getNavLinks: function($html) {
+    nav: function($html) {
         var result = [],
         menu;
         menu = $html.find('#wrapper2 #header #masthead #access #menuContainer ul').html();
@@ -38,9 +39,8 @@ var scrapper = {
         return result;
     },
 
-    getRecentSermons: function($html) {
+    recentSermons: function($html) {
         var result = [],
-        table;
         sermonEls = $html.find('#wrapper2 #mainContainer #main table').children().find('td:first > p:not(:last)');
         $(sermonEls).each(function(i, el) {
             var sermonObj = {};
@@ -51,6 +51,21 @@ var scrapper = {
             $(el).find('a').remove();
             sermonObj['title'] = $(el).text();
             result.push(sermonObj);
+        });
+        return result;
+    },
+
+    upcomingEvents: function($html) {
+        var result = [],
+        eventEls = $html.find('#wrapper2 #mainContainer #main table').children().find('td:eq(2) > p');
+        $(eventEls).each(function(i, el) {
+            var obj = {};
+            obj['title'] = $(el).find('strong').text();
+            $(el).find('strong').remove();
+            obj['link'] = $(el).find('a').attr('href');            
+            $(el).find('a').remove();            
+            obj['subtitle'] = $.trim($(el).text());
+            result.push(obj);
         });
         return result;
     }
