@@ -6,12 +6,12 @@ var self = this;
 fs.readFile('site/index.html', 'utf8', function (err, html) {
     if (err) throw err;        
     var $html = $(html),
-        nav,
-        recentSermons;
-    nav = scrapper.nav($html); 
-    recentSermons = scrapper.recentSermons($html); 
-    upcomingEvents = scrapper.upcomingEvents($html); 
-    console.log(upcomingEvents);
+        nav = scrapper.nav($html),
+        recentSermons = scrapper.recentSermons($html),
+        upcomingEvents = scrapper.upcomingEvents($html),
+        dailyDevotional = scrapper.dailyDevotional($html),
+        slider = scrapper.slider($html); 
+    console.log(slider.length);
 });
 
 var scrapper = {
@@ -65,6 +65,23 @@ var scrapper = {
             obj['link'] = $(el).find('a').attr('href');            
             $(el).find('a').remove();            
             obj['subtitle'] = $.trim($(el).text());
+            result.push(obj);
+        });
+        return result;
+    },
+
+    dailyDevotional: function($html) {
+
+    },
+
+    slider: function($html) {
+        var result = [],
+            sliderLinks = $html.find('#wrapper2 #mainContainer #mainHome #slider2 ul li a');
+        $(sliderLinks).each(function(i, a) {
+            var obj = {};
+            obj.link = $(a).attr('href');
+            obj.img = $(a).find('img').attr('src');
+            obj.subtitle = $(a).find('img').attr('alt');
             result.push(obj);
         });
         return result;
