@@ -1,5 +1,8 @@
 module.exports = {
 	file: "data.json",
-	url: "http://www.calvarysj.org/?page_id=1310",
-	port: 3000
+	url: {
+		base: "http://www.calvarysj.org/",
+		sermons: "?page_id=1310"
+	},
+	port: (process.env.VCAP_APP_PORT || 3000)
 }; 

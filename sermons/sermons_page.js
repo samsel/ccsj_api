@@ -1,33 +1,17 @@
 var request = require('request'),
-    fs 		= require('fs'),
-    $ 		= require('jquery'),
-    crypto	= require('crypto'),
-    config 	= require('./config');
+    $ 		= require('jquery');
 
 
-function Sermons() {
+var SermonsPage = module.exports = function SermonsPage(urlObj) {
+
+	function url() {
+		return urlObj.base + urlObj.sermons;
+	}
 
 	function fetch(callback) {
-		fs.readFile(config.file, {encoding: 'utf8'}, function(err, data) {
-        	if (err) throw err;
-        	callback(data);
-    	});
-	}
-
-	function save(data) {
-		fs.writeFile(config.file, JSON.stringify(data), function (err) {
-		  if (err) throw err;
-		  console.dir('Saved ' + config.file);
-		});
-	}
-
-	function fetchRemote() {
-		request(config.url, function (error, response, body) {
+		request(url(), function (error, response, body) {
 		  if (!error && response.statusCode === 200) {
-		  	var sermons = parse(body);
-		  	if(sermons.length) {
-				save(decorate(sermons));
-		  	}
+		  	callback(parse(body));
 		  }
 		});
 	}
@@ -54,9 +38,6 @@ function Sermons() {
 						if(index === 0) {
 							sermon.date = $(column).html();
 						}
-						if(index === 0) {
-							sermon.date = $(column).html();
-						}
 						else if(index === 1) {
 							sermon.topic = $(column).html();
 						}
@@ -76,18 +57,7 @@ function Sermons() {
 		return sermons;
 	}
 
-	function decorate(data) {
-		return {
-			"sermons": data,
-			"hash": crypto.createHash('md5').update(JSON.stringify(data)).digest("hex"),
-			"modified": new Date().toISOString()
-		};
-	}
-
 	return {
-		fetchRemote: fetchRemote,
 		fetch: fetch
 	};
-}
-
-module.exports = Sermons();
+};

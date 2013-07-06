@@ -7,6 +7,13 @@ app.get('/sermons', function(req, res) {
        res.type('application/json').send(200, data); 
     });
 });
+
+app.get('/', function(req, res) {
+    res.type('application/json').send(200, {
+        "ccsj":true, 
+        date: new Date().toISOString()
+    }); 
+});
  
 app.listen(config.port);
 console.dir("Started App to listen on port " + config.port);
