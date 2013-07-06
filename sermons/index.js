@@ -7,10 +7,7 @@ var fs 			= require('fs'),
 
 var Sermons = module.exports = function Sermons() {
 
-	var sPage = sermonsPage(config.url),
-		rPage = rootPage(config.url);
-
-	function fetchLocal() {
+	function fetchLocal(callback) {
 		fs.readFile(config.file, {encoding: 'utf8'}, function(err, data) {
         	if (err) throw err;
         	callback(data);
@@ -19,9 +16,9 @@ var Sermons = module.exports = function Sermons() {
 
 	function fetchRemote() {
 		var data = [];
-		rPage.fetch(function(d) {
+		sermonsPage.fetch(function(d) {
 			data.push(d);
-			sPage.fetch(function(data) {
+			rootPage.fetch(function(data) {
 				data.push(d);
 				save(data);
 			});
@@ -40,4 +37,3 @@ var Sermons = module.exports = function Sermons() {
 		fetch: fetchLocal
 	}
 }();
-

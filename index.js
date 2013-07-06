@@ -9,6 +9,7 @@ app.get('/sermons', function(req, res) {
 });
 
 app.get('/', function(req, res) {
+    sermons.update();
     res.type('application/json').send(200, {
         "ccsj":true, 
         date: new Date().toISOString()
