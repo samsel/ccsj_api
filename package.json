@@ -4,7 +4,9 @@
   "main": "index.js",
   "private": true,
   "author": "Samuel Selvanathan",
-  "license": "BSD",
+  "scripts": {
+        "start": "node index.js"
+  },
   "dependencies": {
   	"express": "3.x",
     "jquery":"*",
