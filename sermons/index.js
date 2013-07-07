@@ -7,12 +7,24 @@ var fs 			= require('fs'),
 
 var Sermons = module.exports = function Sermons() {
 
-	function fetchLocal(callback) {
+	function fetchLocal(hash, callback) {
 		fs.readFile(config.file, {encoding: 'utf8'}, function(err, data) {
         	if (err) throw err;
-        	callback(data);
+        	data = JSON.parse(data);
+        	callback(filter(hash, data));
     	});
 	}
+
+	function filter(clientHash, localData) {
+		if(clientHash === localData.hash) {
+			// empty the array obj,
+			// since the client already
+			// has the same version of the data object
+			localData.data = [];
+		}
+		return localData;
+	}
+
 
 	function fetchRemote() {
 		var data = [];

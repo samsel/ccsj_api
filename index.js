@@ -3,7 +3,7 @@ var app     = require('express')(),
     config  = require('./config');
  
 app.get('/sermons', function(req, res) {
-    sermons.fetch(function(data) {
+    sermons.fetch(req.query.hash, function(data) {
        res.type('application/json').send(200, data); 
     });
 });
