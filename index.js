@@ -1,6 +1,8 @@
 var app     = require('express')(),
     sermons = require('./sermons'),
     config  = require('./config');
+
+sermons.init();    
  
 app.get('/sermons', function(req, res) {
     sermons.fetch(req.query.hash, function(data) {
@@ -9,7 +11,6 @@ app.get('/sermons', function(req, res) {
 });
 
 app.get('/', function(req, res) {
-    sermons.update();
     res.type('application/json').send(200, {
         "ccsj":true, 
         date: new Date().toISOString()

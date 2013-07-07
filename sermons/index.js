@@ -1,5 +1,6 @@
 var fs 			= require('fs'),
     config 		= require('../config'),
+    cronJob = require('cron').CronJob,
     decorator 	= require('./decorator'),
 	rootPage 	= require('./root_page'),
 	sermonsPage = require('./sermons_page');
@@ -44,8 +45,15 @@ var Sermons = module.exports = function Sermons() {
 		});
 	}	
 
+	function init() {
+		// run the job at 12:01 AM everyday
+		new cronJob('00 01 12 * * *', function() {
+			fetchRemote();
+		}, null, true);		
+	}
+
 	return {
-		update: fetchRemote,
-		fetch: fetchLocal
+		fetch: fetchLocal,
+		init: init
 	}
 }();
